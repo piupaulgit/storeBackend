@@ -4,7 +4,7 @@ const port = 4300;
 
 // testing route
 app.get("/", (req, res) => {
-  res.send("test here piu");
+  res.send(`This is for TEST, server is running on port ${port}`);
 });
 
 // listen to port
