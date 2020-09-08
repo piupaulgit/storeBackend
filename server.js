@@ -1,10 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const app = express();
 const port = 4300;
 
 // import routes
 const authRoutes = require("./routes/auth");
+
+// use body parser
+app.use(bodyParser.json());
 
 // connection of database
 mongoose.connect(
