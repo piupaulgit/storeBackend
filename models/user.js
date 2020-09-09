@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const crypto = require("crypto");
+import { v4 as uuidv4 } from "uuid";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -24,16 +26,25 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
+UserSchema.virtual("password")
+  .set(function (plainPassword) {
+    this._password = plainPassword;
+    this.salt = uuidv4();
+    this.encrypted_password = this.securePassword(this._password);
+  })
+  .get(function () {
+    return this._password;
+  });
+
 UserSchema.method = {
+  authentication: function () {},
   securePassword: function (plainPassword) {
     if (!plainPassword) return "";
     try {
-      const hashPassword = crypto
+      return crypto
         .createHmac("sha256", this.salt)
         .update(plainPassword)
         .digest("hex");
-
-      return hashPassword;
     } catch (error) {
       return "";
     }
