@@ -1,19 +1,20 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
+const cors = require("cors");
 const app = express();
 const port = 4300;
 
 // import routes
 const authRoutes = require("./routes/auth");
 
-// use body parser
-app.use(bodyParser.json());
+// get request body
+app.use(express.json()); // instead body parser
+app.use(cors());
 
 // connection of database
 mongoose.connect(
   `mongodb://piupaul:sonai8961193882@ds135107.mlab.com:35107/store`,
-  { useNewUrlParser: true, useUnifiedTopology: true },
+  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
   (err) => {
     if (err) {
       console.log("something went wrong");
@@ -22,6 +23,7 @@ mongoose.connect(
     }
   }
 );
+
 // testing route
 app.get("/", (req, res) => {
   res.send(`This is for TEST, server is running on port ${port}`);

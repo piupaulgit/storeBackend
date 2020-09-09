@@ -6,16 +6,17 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      unique: true,
     },
-    encry_password: {
-      type: String,
-      required: true,
-    },
-    salt: String,
-    role: {
-      type: Number,
-      default: 0,
-    },
+    // encry_password: {
+    //   type: String,
+    //   required: true,
+    // },
+    // salt: String,
+    // role: {
+    //   type: Number,
+    //   default: 0,
+    // },
   },
   {
     timestamps: true,
