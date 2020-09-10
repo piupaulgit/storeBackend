@@ -38,9 +38,17 @@ exports.loginUser = (req, res) => {
   });
 };
 
+// user logout controller
+exports.logoutUser = (req, res) => {
+  res.clearCookie("token");
+  res.json({
+    message: "User successfully logged out",
+  });
+};
+
 // common functions
 function errorFunc(response, statusCode, msg) {
   return response.status(statusCode).json({
-    errorMessage: msg,
+    message: msg,
   });
 }
