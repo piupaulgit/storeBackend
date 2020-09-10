@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const jwt = require("jsonwebtoken");
 
 // user register controller
 exports.registerUser = (req, res) => {
@@ -25,7 +26,13 @@ exports.loginUser = (req, res) => {
       if (!user.authenticate(password)) {
         errorFunc(res, 400, "Password does not match with the given email Id");
       } else {
-        res.send({ user });
+        // create token with JWT
+        const token = jwt.sign({ _id: user._id }, process.env.SECRETKEY);
+        // set token in cookie
+        res.cookie("token", token);
+        // constructing response for frontend
+        const { _id, email, role } = user;
+        res.json({ token, user: { _id, email, role } });
       }
     }
   });
