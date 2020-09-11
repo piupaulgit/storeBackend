@@ -16,7 +16,7 @@ app.use(cookieParser());
 
 // connection of database
 mongoose.connect(
-  `mongodb://piupaul:sonai8961193882@ds135107.mlab.com:35107/store`,
+  process.env.MONGODATABASECONNECTION,
   { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
   (err) => {
     if (err) {
