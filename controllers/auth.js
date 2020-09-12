@@ -42,6 +42,7 @@ const sendResponseFrontend = (response, statusCode, info) => {
   });
 };
 
+// handle for login
 const handleLoginError = (err) => {
   return err.message;
 };
