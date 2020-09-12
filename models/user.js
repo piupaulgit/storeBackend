@@ -1,19 +1,23 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const { v4: uuidv4 } = require("uuid");
+const { isEmail } = require("validator");
 
 const UserSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-      required: true,
+      required: [true, "Email is required"],
       trim: true,
       unique: true,
+      lowercase: true,
+      validate: [isEmail, "Please enter a valid email id"],
     },
     encrypted_password: {
       type: String,
       trim: true,
-      required: true,
+      required: [true, "password is reuired"],
+      minlength: [3, "Password should be minimum 3 letters"],
     },
     salt: String,
     role: {

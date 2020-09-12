@@ -1,45 +1,37 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const { response } = require("express");
 
 // user register controller
-exports.registerUser = (req, res) => {
-  const user = new User(req.body);
-  user.save((error, usr) => {
-    if (error) {
-      errorFunc(
-        res,
-        400,
-        "Something went wrong while saving user in the Database"
-      );
-    }
-    res.json({ user: usr });
-  });
+module.exports.registerUser = async (req, res) => {
+  try {
+    const user = await User.create(req.body);
+    sendResponseFrontend(res, 201, user);
+  } catch (err) {
+    sendResponseFrontend(res, 400, handleError(err));
+  }
 };
 
 // user login controllers
-exports.loginUser = (req, res) => {
+module.exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
-  User.findOne({ email }).exec((error, user) => {
-    if (error || !user) {
-      errorFunc(res, 401, "No user there with this email in db");
-    } else {
-      if (!user.authenticate(password)) {
-        errorFunc(res, 400, "Password does not match with the given email Id");
-      } else {
-        // create token with JWT
-        const token = jwt.sign({ _id: user._id }, process.env.SECRETKEY);
-        // set token in cookie
-        res.cookie("token", token);
-        // constructing response for frontend
-        const { _id, email, role } = user;
-        res.json({ token, user: { _id, email, role } });
-      }
-    }
-  });
+
+  try {
+    const user = await User.login(email, password);
+    //  create token with JWT
+    const token = jwt.sign({ _id: user._id }, process.env.SECRETKEY);
+    // set token in cookie
+    res.cookie("token", token);
+    const { _id, email, role } = user;
+    sendResponseFrontend(res, 200, { token, user: { _id, email, role } });
+  } catch (err) {
+    // sendResponseFrontend(res, 400, handleError(err));
+    console.log("kl");
+  }
 };
 
 // user logout controller
-exports.logoutUser = (req, res) => {
+module.exports.logoutUser = (req, res) => {
   res.clearCookie("token");
   res.json({
     message: "User successfully logged out",
@@ -52,3 +44,25 @@ function errorFunc(response, statusCode, msg) {
     message: msg,
   });
 }
+
+// send response to frontend
+const sendResponseFrontend = (response, statusCode, info) => {
+  return response.status(statusCode).json({
+    response: info,
+  });
+};
+
+// handle errors messages
+const handleError = (err) => {
+  let errorMsgString;
+  if (!err.code) {
+    let errArr = [];
+    Object.values(err.errors).forEach((element) => {
+      errArr.push(element.message);
+    });
+    errorMsgString = errArr.join(", ");
+  } else {
+    errorMsgString = "Email address is already there is DB";
+  }
+  return errorMsgString;
+};

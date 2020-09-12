@@ -15,17 +15,22 @@ app.use(cors());
 app.use(cookieParser());
 
 // connection of database
-mongoose.connect(
-  process.env.MONGODATABASECONNECTION,
-  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
-  (err) => {
-    if (err) {
-      console.log("something went wrong");
-    } else {
-      console.log("connected with Mongo DB");
-    }
-  }
-);
+mongoose
+  .connect(process.env.MONGODATABASECONNECTION, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  })
+  .then((result) => {
+    // listen to port
+    app.listen(port);
+    console.log(`server is running on port ${port}`);
+    console.log(`DB connected`);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+// =========================================
 
 // testing route
 app.get("/", (req, res) => {
@@ -34,7 +39,3 @@ app.get("/", (req, res) => {
 
 // register routes
 app.use("/app", authRoutes);
-
-// listen to port
-app.listen(port);
-console.log(`server is running on port ${port}`);
