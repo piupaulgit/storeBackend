@@ -23,8 +23,7 @@ module.exports.loginUser = async (req, res) => {
     const { _id, role } = user;
     res.status(200).json({ token: token, user: { _id, email, role } });
   } catch (err) {
-    handleError(err);
-    res.status(400).json(errr);
+    sendResponseFrontend(res, 400, handleLoginError(err));
   }
 };
 
@@ -36,13 +35,6 @@ module.exports.logoutUser = (req, res) => {
   });
 };
 
-// common functions
-function errorFunc(response, statusCode, msg) {
-  return response.status(statusCode).json({
-    message: msg,
-  });
-}
-
 // send response to frontend
 const sendResponseFrontend = (response, statusCode, info) => {
   return response.status(statusCode).json({
@@ -50,6 +42,9 @@ const sendResponseFrontend = (response, statusCode, info) => {
   });
 };
 
+const handleLoginError = (err) => {
+  return err.message;
+};
 // handle errors messages
 const handleError = (err) => {
   let errorMsgString;
