@@ -57,4 +57,17 @@ UserSchema.methods = {
   },
 };
 
+// static method for user login
+UserSchema.statics.login = async function (email, password) {
+  const user = await this.findOne({ email });
+  if (user) {
+    const auth = user.authenticate(password);
+    if (auth) {
+      return user;
+    }
+    throw Error("incorrect password");
+  }
+  throw Error("incorrect email");
+};
+
 module.exports = mongoose.model("User", UserSchema);

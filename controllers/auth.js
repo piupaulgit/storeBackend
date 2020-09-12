@@ -15,18 +15,16 @@ module.exports.registerUser = async (req, res) => {
 // user login controllers
 module.exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const user = await User.login(email, password);
-    //  create token with JWT
+    // create token
     const token = jwt.sign({ _id: user._id }, process.env.SECRETKEY);
-    // set token in cookie
-    res.cookie("token", token);
-    const { _id, email, role } = user;
-    sendResponseFrontend(res, 200, { token, user: { _id, email, role } });
+    res.cookie("token", token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
+    const { _id, role } = user;
+    res.status(200).json({ token: token, user: { _id, email, role } });
   } catch (err) {
-    // sendResponseFrontend(res, 400, handleError(err));
-    console.log("kl");
+    handleError(err);
+    res.status(400).json(errr);
   }
 };
 
