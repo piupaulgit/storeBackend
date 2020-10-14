@@ -8,6 +8,7 @@ const port = 4300;
 
 // import routes
 const authRoutes = require("./routes/auth");
+const projectRoutes = require("./routes/project")
 
 // get request body
 app.use(express.json()); // instead body parser
@@ -39,3 +40,4 @@ app.get("/", (req, res) => {
 
 // register routes
 app.use("/app", authRoutes);
+app.use("/app", projectRoutes)
