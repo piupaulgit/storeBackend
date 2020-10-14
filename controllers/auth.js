@@ -6,9 +6,9 @@ const { response } = require("express");
 module.exports.registerUser = async (req, res) => {
   try {
     const user = await User.create(req.body);
-    sendResponseFrontend(res, 201, user);
+    sendResponseFrontend(res, 201, user, false);
   } catch (err) {
-    sendResponseFrontend(res, 400, handleError(err));
+    sendResponseFrontend(res, 400, handleError(err), true);
   }
 };
 
@@ -23,7 +23,7 @@ module.exports.loginUser = async (req, res) => {
     const { _id, role } = user;
     res.status(200).json({ token: token, user: { _id, email, role } });
   } catch (err) {
-    sendResponseFrontend(res, 400, handleLoginError(err));
+    sendResponseFrontend(res, 400, handleLoginError(err), true);
   }
 };
 
@@ -36,9 +36,10 @@ module.exports.logoutUser = (req, res) => {
 };
 
 // send response to frontend
-const sendResponseFrontend = (response, statusCode, info) => {
+const sendResponseFrontend = (response, statusCode, info, errorFlag) => {
   return response.status(statusCode).json({
     response: info,
+    errorFlag: errorFlag,
   });
 };
 
