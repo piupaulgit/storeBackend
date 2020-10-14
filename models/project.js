@@ -39,7 +39,20 @@ const ProjectSchema = new mongoose.Schema({
         email: {
             type: String
         }
-    }
+    },
+    mileStones: [
+        {
+            title: {
+                type:String
+            },
+            description: {
+                type: String
+            },
+            budget: {
+                type: Number
+            }
+        }
+    ]
 },
 {
     timestamps: true
