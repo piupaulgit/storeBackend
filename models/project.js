@@ -15,6 +15,9 @@ const ProjectSchema = new mongoose.Schema({
         lowercase: true,
         trim: true
     },
+    status: {
+        type: String
+    },
     budget: {
         type: Number,
         trim: true,
