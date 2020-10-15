@@ -1,6 +1,6 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
-const { response } = require("express");
+const expressJwt = require('express-jwt');
 
 // user register controller
 module.exports.registerUser = async (req, res) => {
@@ -61,3 +61,26 @@ const handleError = (err) => {
   }
   return errorMsgString;
 };
+
+
+// middlewares =====
+
+// isSignedIn
+exports.isSignedIn = expressJwt({
+  secret: process.env.SECRETKEY,
+  userProperty: "auth",
+  algorithms: ["HS256"]
+})
+// =================================
+
+// isAuthenticated
+exports.isAuthenticated = (req,res,next) => {
+  next();
+}
+// ====================================
+
+
+// isAdmin
+exports.isAdmin = (req,res,next) => {
+  next();
+}
