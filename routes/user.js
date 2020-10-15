@@ -13,11 +13,6 @@ router.post("/login", loginUser);
 router.get("/logout", logoutUser);
 
 
-// test with isSignedIn
-router.get('/auth-test', isSignedIn, (req, res) => {
-    res.status(200).json({
-        msg: "success"
-    })
-})
+
 
 module.exports = router;

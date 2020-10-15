@@ -1,5 +1,6 @@
 
 const expressJwt = require('express-jwt');
+const { sendResponseToFrontend } = require('../shared/handleResponse');
 
 
 
@@ -16,6 +17,10 @@ exports.isSignedIn = expressJwt({
   
   // isAuthenticated
   exports.isAuthenticated = (req,res,next) => {
+      const isAuhenticUser = req.profile && req.auth && req.profile._id == req.auth._id;
+      if(!isAuhenticUser) {
+          sendResponseToFrontend(res, 403, {}, true, "access denied");
+      }
     next();
   }
   // ====================================
@@ -23,5 +28,8 @@ exports.isSignedIn = expressJwt({
   
   // isAdmin
   exports.isAdmin = (req,res,next) => {
+    if(req.profile.role !== 0 ){
+        sendResponseToFrontend(res, 403, {}, true, "you are not admin");
+    }
     next();
   }

@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const { sendResponseToFrontend } = require("../shared/handleResponse");
 
 // user register controller
 module.exports.registerUser = async (req, res) => {
@@ -33,6 +34,17 @@ module.exports.logoutUser = (req, res) => {
     message: "User successfully logged out",
   });
 };
+
+// get user by id
+exports.getUserbyId = (req,res,next,id) => {
+  User.findById(id).exec((err,user) => {
+    if(err || !user){
+      sendResponseToFrontend(res,400,{},true,"user not found in DB")
+    }
+    req.profile = user;
+    next();
+  })
+}
 
 // send response to frontend
 const sendResponseFrontend = (response, statusCode, info, errorFlag) => {
