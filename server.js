@@ -7,7 +7,7 @@ const app = express();
 const port = 4300;
 
 // import routes
-const authRoutes = require("./routes/auth");
+const authRoutes = require("./routes/user");
 const projectRoutes = require("./routes/project")
 
 // get request body
