@@ -1,4 +1,4 @@
-const Project = require('../models/project')
+const Project = require('../models/project');
 const { sendResponseToFrontend } = require('../shared/handleResponse')
 
 
@@ -15,6 +15,14 @@ module.exports.addProject = async(req, res) => {
 }
 
 // get all projects
+module.exports.getAllProjects = (req, res) => {
+    Project.find().exec((err, project) => {
+        if(err){
+            sendResponseToFrontend(res, 400, {},true, "No project found")
+        }
+        sendResponseToFrontend(res, 200, project, false, "project successfully fetched")
+    })
+}
 // ==================================
 
 // get single project detail
